@@ -6,8 +6,12 @@ exports.getRoutes = function (obj, args, { knex }) {
 }
 
 exports.getRoutesFromStop = async function (obj, args, { slonik }) {
-  const datetimeobj = DateTime.fromJSDate(args.date, { zone: 'UTC' })
-  const serviceIDs = await require('../calendar/utils').getServiceIDsFromDate({ date: datetimeobj, feed_index: obj.feed_index, slonik })
+  let serviceIDQuery = sql``
+  if (args.date) {
+    const datetimeobj = DateTime.fromJSDate(args.date, { zone: 'UTC' })
+    const serviceIDs = await require('../calendar/utils').getServiceIDsFromDate({ date: datetimeobj, feed_index: obj.feed_index, slonik })
+    serviceIDQuery = sql`AND gtfs.trips.service_id = ANY(${sql.array(serviceIDs, sql`text[]`)})`
+  }
 
   const res = await slonik.any(sql`
     SELECT DISTINCT * FROM gtfs.routes
@@ -15,7 +19,7 @@ exports.getRoutesFromStop = async function (obj, args, { slonik }) {
       AND route_id IN
         (SELECT route_id FROM gtfs.trips
         WHERE gtfs.trips.feed_index = ${obj.feed_index} 
-        AND gtfs.trips.service_id = ANY(${sql.array(serviceIDs, sql`text[]`)})
+        ${serviceIDQuery}
         AND gtfs.trips.trip_id IN
           (SELECT trip_id FROM gtfs.stop_times
           WHERE gtfs.stop_times.feed_index = ${obj.feed_index}
@@ -23,6 +27,5 @@ exports.getRoutesFromStop = async function (obj, args, { slonik }) {
           )
         )
   `)
-  console.log(res)
   return res
 }

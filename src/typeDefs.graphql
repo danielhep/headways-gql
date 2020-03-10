@@ -52,7 +52,7 @@ type Stop {
   stop_id: ID
   zone_id: String
   stop_times(date: Date!, routes: [ID]): [StopTime]
-  routes(date: Date!): [Route]
+  routes(date: Date): [Route]
 }
 
 type StopJson {
