@@ -11,4 +11,4 @@ const corsConfig = {
   preflightContinue: false,
   optionsSuccessStatus: 204
 }
-server.start({ cors: corsConfig }, () => { console.log('Server is now running at localhost:4000') })
+server.start({ port: process.env.PORT || 3000, cors: corsConfig }, () => { console.log('Server is now running at localhost:4000') })
