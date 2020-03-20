@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "@sentry/node": "^5.13.2",
     "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
+    "graphql-middleware-sentry": "^3.2.1",
     "graphql-yoga": "^1.18.3",
     "knex": "^0.20.11",
     "luxon": "^1.22.0",

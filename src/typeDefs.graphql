@@ -79,6 +79,7 @@ type Trip {
 }
 
 type Query {
+  sentry_test: String
   feed(feed_index: Int): Feed
   feeds: [Feed]
   agencies: [Agency]

@@ -3,6 +3,7 @@ const { GraphQLDate } = require('graphql-iso-date')
 module.exports = {
   Date: GraphQLDate,
   Query: {
+    sentry_test: () => { throw new Error('Hello Sentry!') },
     agencies: require('./database/agency').getAgencies,
     agency: require('./database/agency').getAgency,
     feeds: require('./database/feed').getFeeds,
