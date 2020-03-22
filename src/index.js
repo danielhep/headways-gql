@@ -19,7 +19,7 @@ const sentryMiddleware = sentry({
 
 const server = new GraphQLServer({ typeDefs: './src/typeDefs.graphql', resolvers, context: database, middlewares: [sentryMiddleware] })
 
-const port = process.env.port || 3000
+const port = process.env.PORT || 3000
 
 const cors = {
   origin: '*',
