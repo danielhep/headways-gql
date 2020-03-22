@@ -1,18 +1,13 @@
 const knex = require('knex')({
   client: 'pg',
-  connection: {
-    host: '127.0.0.1',
-    user: 'danielhep',
-    password: 'temppass',
-    database: 'headways'
-  }
+  connection: process.env.DB_URI
 })
 
 const { Duration } = require('luxon')
 const { createPool, createTypeParserPreset, createIntervalTypeParser } = require('slonik')
 
 const slonik = createPool(
-  'postgresql://danielhep:temppass@localhost/headways',
+  process.env.DB_URI,
   {
     typeParsers: [
       ...createTypeParserPreset(),
