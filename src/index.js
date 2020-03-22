@@ -11,9 +11,9 @@ const sentryMiddleware = sentry({
     environment: process.env.NODE_ENV
   },
   withScope: (scope, error, context) => {
-    scope.setExtra('body', context.request.body)
-    scope.setExtra('origin', context.request.headers.origin)
-    scope.setExtra('user-agent', context.request.headers['user-agent'])
+    // scope.setExtra('body', context.request.body)
+    // scope.setExtra('origin', context.request.headers.origin)
+    // scope.setExtra('user-agent', context.request.headers['user-agent'])
   }
 })
 
