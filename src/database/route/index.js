@@ -59,5 +59,5 @@ exports.getShapesFromRoute = async function (obj, args, { slonik }) {
       )
   `)
 
-  return shapes
+  return shapes.map(d => JSON.parse(d.st_asgeojson))
 }
