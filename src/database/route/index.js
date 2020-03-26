@@ -29,3 +29,28 @@ exports.getRoutesFromStop = async function (obj, args, { slonik }) {
   `)
   return res
 }
+
+exports.getRoute = async function (obj, args, { slonik }) {
+  console.log('Hello')
+  const route = await slonik.one(sql`
+    SELECT * FROM gtfs.routes 
+    WHERE feed_index = ${obj.feed_index}
+    AND route_id = ${args.route_id}
+  `)
+  console.log(route)
+  return route
+}
+
+exports.getShapesFromRoute = async function (obj, args, { slonik }) {
+  const shapes = await slonik.any(sql`
+    SELECT ST_AsGeoJSON(the_geom) FROM gtfs.shape_geoms
+    WHERE feed_index = ${obj.feed_index}
+    AND shape_id IN
+      (
+        SELECT DISTINCT shape_id FROM gtfs.trips
+        WHERE route_id = ${obj.route_id}
+      )
+  `)
+
+  return shapes
+}

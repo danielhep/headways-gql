@@ -1,6 +1,7 @@
 scalar Date
 scalar Time
 scalar PointObject
+scalar ShapeObject
 
 type Location {
   lat: Float
@@ -19,6 +20,7 @@ type Feed {
   stops_json: [PointObject]
   routes: [Route]
   stop(stop_id: ID!): Stop
+  route(route_id: ID!): Route
 }
 
 type Route {
@@ -29,6 +31,7 @@ type Route {
   route_text_color: String
   route_id: String
   route_short_name: String
+  shapes: [ShapeObject]
   stops: [Stop]
   trips: [Trip]
 }

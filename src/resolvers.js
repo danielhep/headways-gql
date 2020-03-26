@@ -14,7 +14,8 @@ module.exports = {
     routes: require('./database/route').getRoutes,
     stops: require('./database/stop').getStops,
     stops_json: require('./database/stop').getStopsJson,
-    stop: require('./database/stop').getStop
+    stop: require('./database/stop').getStop,
+    route: require('./database/route').getRoute
   },
   Agency: {
     routes: require('./database/route').getRoutes,
@@ -26,6 +27,9 @@ module.exports = {
       }
     },
     stops: require('./database/stop').getStops
+  },
+  Route: {
+    shapes: require('./database/route').getShapesFromRoute
   },
   Stop: {
     stop_times: require('./database/stop').getStopTimes,
