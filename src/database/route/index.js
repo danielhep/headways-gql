@@ -31,14 +31,21 @@ exports.getRoutesFromStop = async function (obj, args, { slonik }) {
 }
 
 exports.getRoute = async function (obj, args, { slonik }) {
-  console.log('Hello')
   const route = await slonik.one(sql`
     SELECT * FROM gtfs.routes 
     WHERE feed_index = ${obj.feed_index}
     AND route_id = ${args.route_id}
   `)
-  console.log(route)
   return route
+}
+
+exports.getRoutesFromShortName = async function (obj, args, { slonik }) {
+  const routes = await slonik.any(sql`
+    SELECT * FROM gtfs.routes
+    WHERE feed_index = ${obj.feed_index}
+    AND route_short_name = ANY(${sql.array(args.route_short_names, sql`text[]`)})
+  `)
+  return routes
 }
 
 exports.getShapesFromRoute = async function (obj, args, { slonik }) {

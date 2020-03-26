@@ -15,7 +15,8 @@ module.exports = {
     stops: require('./database/stop').getStops,
     stops_json: require('./database/stop').getStopsJson,
     stop: require('./database/stop').getStop,
-    route: require('./database/route').getRoute
+    route: require('./database/route').getRoute,
+    routes_by_short_name: require('./database/route').getRoutesFromShortName
   },
   Agency: {
     routes: require('./database/route').getRoutes,

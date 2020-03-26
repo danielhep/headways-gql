@@ -21,6 +21,7 @@ type Feed {
   routes: [Route]
   stop(stop_id: ID!): Stop
   route(route_id: ID!): Route
+  routes_by_short_name(route_short_names: [String!]): [Route]
 }
 
 type Route {
