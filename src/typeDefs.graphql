@@ -17,6 +17,7 @@ type Feed {
   feed_lon: Float
   agencies: [Agency]
   stops: [Stop]
+  stop_times: [StopTime]
   stops_json: [PointObject]
   routes: [Route]
   stop(stop_id: ID!): Stop

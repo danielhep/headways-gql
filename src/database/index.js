@@ -16,7 +16,7 @@ const knex = require('knex')({
               console.log('Connection failed')
               console.log(err)
             } else {
-              console.log('Connection suceeded.')
+              console.log('Connection succeeded.')
             }
             // if err is not falsy, connection is discarded from pool
             // if connection aquire was triggered by a query the error is passed to query promise
