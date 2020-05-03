@@ -10,6 +10,8 @@ exports.getRoutes = function (obj, args, { slonik }) {
   `) // this sql sorts by numbers first, then letters
 }
 
+// args: contains date
+// obj is a stop
 exports.getRoutesFromStop = async function (obj, args, { slonik }) {
   let serviceIDQuery = sql``
   if (args.date) {
