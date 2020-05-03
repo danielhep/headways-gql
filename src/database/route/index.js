@@ -1,8 +1,13 @@
 const { sql } = require('slonik')
 const { DateTime } = require('luxon')
 
-exports.getRoutes = function (obj, args, { knex }) {
-  return knex.withSchema('gtfs').select().from('routes').where({ feed_index: obj.feed_index })
+exports.getRoutes = function (obj, args, { slonik }) {
+  return slonik.any(sql`
+    SELECT * FROM gtfs.routes
+    WHERE feed_index = ${obj.feed_index}
+    ORDER BY (substring(route_short_name, '^[0-9]+'))::int  
+          ,substring(route_short_name, '[^0-9_].*$')
+  `) // this sql sorts by numbers first, then letters
 }
 
 exports.getRoutesFromStop = async function (obj, args, { slonik }) {
@@ -14,7 +19,7 @@ exports.getRoutesFromStop = async function (obj, args, { slonik }) {
   }
 
   const res = await slonik.any(sql`
-    SELECT DISTINCT * FROM gtfs.routes
+    SELECT * FROM gtfs.routes
       WHERE feed_index = ${obj.feed_index}
       AND route_id IN
         (SELECT route_id FROM gtfs.trips
@@ -44,6 +49,15 @@ exports.getRoutesFromShortName = async function (obj, args, { slonik }) {
     SELECT * FROM gtfs.routes
     WHERE feed_index = ${obj.feed_index}
     AND route_short_name = ANY(${sql.array(args.route_short_names, sql`text[]`)})
+  `)
+  return routes
+}
+
+exports.getRoutesFromID = async function (obj, args, { slonik }) {
+  console.log(args)
+  const routes = await slonik.any(sql`
+    SELECT * FROM gtfs.routes
+    WHERE _id = ANY(${sql.array(args.route_ids, sql`uuid[]`)})
   `)
   return routes
 }

@@ -49,13 +49,6 @@ const slonik = createPool(
 
 slonik.connect(() => {
   console.log(slonik.getPoolState())
-
-  // {
-  //   activeConnectionCount: 1,
-  //   ended: false,
-  //   idleConnectionCount: 0,
-  //   waitingClientCount: 0,
-  // }
 })
 
 module.exports.slonik = slonik

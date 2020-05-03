@@ -7,7 +7,8 @@ module.exports = {
     agencies: require('./database/agency').getAgencies,
     agency: require('./database/agency').getAgency,
     feeds: require('./database/feed').getFeeds,
-    feed: require('./database/feed').getFeed
+    feed: require('./database/feed').getFeed,
+    routes_by_id: require('./database/route').getRoutesFromID
   },
   Feed: {
     agencies: require('./database/agency').getAgencies,

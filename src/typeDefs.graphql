@@ -21,7 +21,7 @@ type Feed {
   routes: [Route]
   stop(stop_id: ID!): Stop
   route(route_id: ID!): Route
-  routes_by_short_name(route_short_names: [String!]): [Route]
+  routes_by_short_name(route_short_names: [String]): [Route]
 }
 
 type Route {
@@ -32,6 +32,7 @@ type Route {
   route_text_color: String
   route_id: String
   route_short_name: String
+  route_desc: String
   shapes: [ShapeObject]
   stops: [Stop]
   trips: [Trip]
@@ -88,4 +89,5 @@ type Query {
   feeds: [Feed]
   agencies: [Agency]
   agency(agency_id: ID!, feed_index: ID!): Agency
+  routes_by_id(route_ids: [ID]): [Route]
 }

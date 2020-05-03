@@ -16,8 +16,12 @@ exports.getStopsJson = async function (obj, args, { slonik }) {
 
 // Args: stop_id
 // Obj: feed_index,
-exports.getStop = async function getStop (obj, args, context) {
-  return context.knex.withSchema('gtfs').select().where({ ...args, feed_index: obj.feed_index }).from('stops').first()
+exports.getStop = async function getStop (obj, args, { slonik }) {
+  return slonik.one(sql`
+    SELECT * FROM gtfs.stops
+    WHERE stop_id = ${args.stop_id}
+    AND feed_index = ${obj.feed_index}
+  `)
 }
 
 // args: routes, date

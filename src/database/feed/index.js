@@ -1,7 +1,13 @@
-exports.getFeeds = function (obj, args, { knex }) {
-  return knex.withSchema('gtfs').select().from('feed_info')
-}
+const { sql } = require('slonik')
 
-exports.getFeed = function (obj, args, { knex }) {
-  return knex.withSchema('gtfs').select().from('feed_info').where(args).first()
+exports.getFeeds = async function (obj, args, { slonik }) {
+  return slonik.any(sql`
+    SELECT * FROM gtfs.feed_info
+  `)
+}
+exports.getFeed = async function (obj, args, { slonik }) {
+  return slonik.one(sql`
+    SELECT * FROM gtfs.feed_info
+    WHERE feed_index = ${args.feed_index}
+  `)
 }
