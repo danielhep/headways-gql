@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@sentry/node": "^5.13.2",
+    "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",

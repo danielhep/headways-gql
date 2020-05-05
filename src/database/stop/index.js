@@ -29,21 +29,29 @@ exports.getStop = async function getStop (obj, args, { slonik }) {
 exports.getStopTimes = async function getStopTimes (obj, args, { slonik }) {
   const datetimeobj = DateTime.fromJSDate(args.date, { zone: 'UTC' })
   const serviceIDs = await require('../calendar/utils').getServiceIDsFromDate({ date: datetimeobj, feed_index: obj.feed_index, slonik })
+  console.log(obj.stop_id)
+  let routeIdQuery = sql``
+  if (args.routes) {
+    routeIdQuery = sql`AND gtfs.trips.route_id = ANY(${sql.array(args.routes, sql`text[]`)})`
+  }
 
   const stopTimes = await slonik.any(sql`
-    SELECT * FROM gtfs.stop_times
-    WHERE 
-    stop_id = ${obj.stop_id}
-    AND
-    feed_index = ${obj.feed_index}
-    AND
-    trip_id IN
-      (SELECT trip_id FROM gtfs.trips
-      WHERE gtfs.trips.service_id = ANY(${sql.array(serviceIDs, sql`text[]`)})
-      AND gtfs.trips.route_id = ANY(${sql.array(args.routes, sql`text[]`)})
-      )
-    ORDER BY departure_time
-  `)
+  SELECT * FROM gtfs.stop_times
+  WHERE 
+  stop_id = ${obj.stop_id}
+  AND
+  feed_index = ${obj.feed_index}
+  AND
+  trip_id IN
+  (
+    SELECT trip_id FROM gtfs.trips
+    WHERE gtfs.trips.service_id = ANY(${sql.array(serviceIDs, sql`text[]`)})
+    ${routeIdQuery}
+  )
+  ORDER BY departure_time
+    `)
+  console.log('He')
+  // console.log(stopTimes[1])
 
   let prevDepartureTime = null
   const stopTimesWithPrevStopTime = stopTimes.map((time) => {
@@ -56,6 +64,6 @@ exports.getStopTimes = async function getStopTimes (obj, args, { slonik }) {
     prevDepartureTime = time.departure_time
     return time
   })
-
+  console.log(stopTimesWithPrevStopTime[1])
   return stopTimesWithPrevStopTime
 }

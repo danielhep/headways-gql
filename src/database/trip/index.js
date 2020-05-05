@@ -1,8 +1,9 @@
-exports.getRouteFromTrip = function (obj, args, { knex }) {
-  const where = {
-    route_id: obj.route_id,
-    feed_index: obj.feed_index
-  }
+const { sql } = require('slonik')
 
-  return knex.withSchema('gtfs').select().where(where).from('routes').first()
+exports.getRouteFromTrip = function (obj, args, { slonik }) {
+  return slonik.one(sql`
+    SELECT * FROM gtfs.routes 
+    WHERE route_id = ${obj.route_id}
+    AND feed_index = ${obj.feed_index}
+  `)
 }
