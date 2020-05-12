@@ -1,35 +1,7 @@
-const knex = require('knex')({
-  client: 'pg',
-  connection: process.env.DB_URI,
-  pool: {
-    afterCreate: function (conn, done) {
-      // in this example we use pg driver's connection API
-      conn.query('SET timezone="UTC";', function (err) {
-        if (err) {
-          // first query failed, return error and don't try to make next query
-          console.log('Connection failed.')
-          done(err, conn)
-        } else {
-          // do the second query...
-          conn.query('SELECT pg_database_size(\'headways\');', function (err) {
-            if (err) {
-              console.log('Connection failed')
-              console.log(err)
-            } else {
-              console.log('Connection succeeded.')
-            }
-            // if err is not falsy, connection is discarded from pool
-            // if connection aquire was triggered by a query the error is passed to query promise
-            done(err, conn)
-          })
-        }
-      })
-    }
-  }
-})
-
 const { Duration } = require('luxon')
-const { createPool, createTypeParserPreset, createIntervalTypeParser } = require('slonik')
+const { sql, createPool, createTypeParserPreset, createIntervalTypeParser } = require('slonik')
+const DataLoader = require('dataloader')
+const _ = require('lodash')
 
 const slonik = createPool(
   process.env.DB_URI,
@@ -51,5 +23,23 @@ slonik.connect(() => {
   console.log(slonik.getPoolState())
 })
 
+const batch = {
+  async trips (keys) {
+    const tuples = _.map(keys, (key) => sql.join([key.feed_index, key.trip_id], sql`, `))
+
+    const res = await slonik.any(sql`
+      SELECT * FROM gtfs.trips
+      WHERE (feed_index, trip_id) = ${sql.join(tuples, sql`, `)}
+    `)
+
+    // ensure that the order of the return is the same as the keys
+    return _.map(keys, (key) => res.find(v => (v.feed_index === key.feed_index) && (v.trip_id === key.trip_id)))
+  }
+}
+
+const dataLoaders = {
+  trip: new DataLoader(batch.trips)
+}
+
+module.exports.dataLoaders = dataLoaders
 module.exports.slonik = slonik
-module.exports.knex = knex
