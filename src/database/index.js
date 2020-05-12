@@ -25,12 +25,13 @@ slonik.connect(() => {
 
 const batch = {
   async trips (keys) {
-    const tuples = _.map(keys, (key) => sql.join([key.feed_index, key.trip_id], sql`, `))
-
+    const tuples = _.map(keys, (key) => sql`(${sql.join([key.feed_index, key.trip_id], sql`, `)})`)
+    console.log(tuples)
     const res = await slonik.any(sql`
       SELECT * FROM gtfs.trips
-      WHERE (feed_index, trip_id) = ${sql.join(tuples, sql`, `)}
+      WHERE (feed_index, trip_id) IN (${sql.join(tuples, sql`, `)})
     `)
+    console.log('after')
 
     // ensure that the order of the return is the same as the keys
     return _.map(keys, (key) => res.find(v => (v.feed_index === key.feed_index) && (v.trip_id === key.trip_id)))

@@ -1,5 +1,4 @@
 const { Duration } = require('luxon')
-const { sql } = require('slonik')
 
 // luxon duration is used to contain the timestamp since it can contain times past 24 hours
 // timepoints in the next service day will be in the next day's time
@@ -19,10 +18,8 @@ exports.getLuxonDurationFromInterval = (arrivalOrDeparture) => function (obj, ar
   return Duration.fromObject(timeObj)
 }
 
-exports.getTripFromStopTime = async function (obj, args, { slonik }) {
-  return slonik.one(sql`
-    SELECT * FROM gtfs.trips
-    WHERE trip_id = ${obj.trip_id}
-    AND feed_index = ${obj.feed_index}
-  `)
+exports.getTripFromStopTime = async function ({ trip_id, feed_index }, args, { dataLoaders }) {
+  const res = await dataLoaders.trip.load({ trip_id, feed_index })
+  console.log(res)
+  return res
 }
