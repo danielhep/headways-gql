@@ -1,0 +1,4 @@
+{
+    "editor.defaultFormatter": "chenxsan.vscode-standardjs",
+    "standard.autoFixOnSave": true
+}
