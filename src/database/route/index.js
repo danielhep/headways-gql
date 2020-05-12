@@ -56,7 +56,6 @@ exports.getRoutesFromShortName = async function (obj, args, { slonik }) {
 }
 
 exports.getRoutesFromID = async function (obj, args, { slonik }) {
-  console.log(args)
   const routes = await slonik.any(sql`
     SELECT * FROM gtfs.routes
     WHERE _id = ANY(${sql.array(args.route_ids, sql`uuid[]`)})
