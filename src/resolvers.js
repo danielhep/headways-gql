@@ -44,6 +44,6 @@ module.exports = {
     time_since_last_readable: require('./database/stop/utils.js').getTimeFromDuration('time_since_last')
   },
   Trip: {
-    route: require('./database/trip').getRouteFromTrip
+    route: ({ route_id, feed_index }, args, { dataLoaders }) => dataLoaders.routes.load({ route_id, feed_index })
   }
 }
