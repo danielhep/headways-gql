@@ -18,7 +18,7 @@ const sentryMiddleware = sentry({
 })
 
 const server = new GraphQLServer({ typeDefs: './src/typeDefs.graphql', resolvers, context: database, middlewares: [sentryMiddleware] })
-
+const express = server.express
 const port = process.env.PORT || 3000
 
 const cors = {
@@ -29,3 +29,6 @@ const cors = {
 }
 
 server.start({ port, cors, options: { debug: true } }, () => { console.log(`Server is now running at http://localhost:${port}/`) })
+
+const { getReq } = require('./realtime/realtime.js')
+express.get('/rt', getReq)
