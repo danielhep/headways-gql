@@ -10,9 +10,12 @@ module.exports = {
     const stopTimes = dataObj.data[0].entry[0].arrivalsAndDepartures[0].arrivalAndDeparture
     const transformedStopTimes = stopTimes.map((x) => ({
       predicted: x.predicted[0],
-      predictedDepartureTime: (x.predictedDepartureTime[0] - currentTime) / 1000 / 60
+      // predicted time == 0 when it's a long way out?
+      // the times are returned as strings, so this code is messy because we are doing implicit casts. TODO
+      predictedDepartureTime: x.predictedDepartureTime[0] !== '0' ? (x.predictedDepartureTime[0] - currentTime) / 1000 / 60 : (x.scheduledDepartureTime[0] - currentTime) / 1000 / 60
     }))
-    console.log(transformedStopTimes)
+    console.log(stopTimes)
+    res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(transformedStopTimes))
   }
 }
