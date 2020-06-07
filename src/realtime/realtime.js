@@ -4,7 +4,9 @@ const OBA_KEY = process.env.OBA_KEY
 
 module.exports = {
   async getReq (req, res) {
-    const data = await fetch(`http://api.pugetsound.onebusaway.org/api/where/arrivals-and-departures-for-stop/1_17230.xml?key=${OBA_KEY}&minutesAfter=120`)
+    // const stopID = '1_17230' // 62
+    const stopID = '1_7210' // e line
+    const data = await fetch(`http://api.pugetsound.onebusaway.org/api/where/arrivals-and-departures-for-stop/${stopID}.xml?key=${OBA_KEY}&minutesAfter=120`)
     const dataObj = (await xml2js.parseStringPromise(await data.text())).response
     const currentTime = dataObj.currentTime[0]
     const stopTimes = dataObj.data[0].entry[0].arrivalsAndDepartures[0].arrivalAndDeparture
@@ -12,7 +14,7 @@ module.exports = {
       predicted: x.predicted[0] === 'true',
       // predicted time == 0 when it's a long way out?
       // the times are returned as strings, so this code is messy because we are doing implicit casts. TODO
-      predictedDepartureTime: x.predicted[0] ? (x.predictedDepartureTime[0] - currentTime) / 1000 / 60 : (x.scheduledDepartureTime[0] - currentTime) / 1000 / 60,
+      predictedDepartureTime: x.predicted[0] === 'true' ? (x.predictedDepartureTime[0] - currentTime) / 1000 / 60 : (x.scheduledDepartureTime[0] - currentTime) / 1000 / 60,
       deviation: x.predicted[0] === 'true' ? x.tripStatus[0].scheduleDeviation[0] / 60 : null
     }))
     console.log(stopTimes[0].tripStatus)
