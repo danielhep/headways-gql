@@ -1,4 +1,5 @@
 {
     "editor.defaultFormatter": "chenxsan.vscode-standardjs",
-    "standard.autoFixOnSave": true
+    "standard.autoFixOnSave": true,
+    "terminal.integrated.fontFamily": "MesloLGS NF"
 }
