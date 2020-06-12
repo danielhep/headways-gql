@@ -19,6 +19,6 @@ module.exports = {
     }))
     console.log(stopTimes[0].tripStatus)
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify(transformedStopTimes))
+    res.send(JSON.stringify(transformedStopTimes.filter(x => x.predictedDepartureTime > 0)))
   }
 }
