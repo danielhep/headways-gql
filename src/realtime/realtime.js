@@ -5,11 +5,11 @@ const OBA_KEY = process.env.OBA_KEY
 module.exports = {
   async getReq (req, res) {
     // const stopID = '1_17230' // 62
-    const stopID = '1_7210' // e line
+    const stopID = req.query.stop // e line
     const data = await fetch(`http://api.pugetsound.onebusaway.org/api/where/arrivals-and-departures-for-stop/${stopID}.xml?key=${OBA_KEY}&minutesAfter=120`)
     const dataObj = (await xml2js.parseStringPromise(await data.text())).response
     const currentTime = dataObj.currentTime[0]
-    const stopTimes = dataObj.data[0].entry[0].arrivalsAndDepartures[0].arrivalAndDeparture
+    const stopTimes = dataObj.data[0].entry[0].arrivalsAndDepartures[0].arrivalAndDeparture.filter(x => x.routeId[0] === req.query.route)
     const transformedStopTimes = stopTimes.map((x) => ({
       predicted: x.predicted[0] === 'true',
       // predicted time == 0 when it's a long way out?
@@ -17,7 +17,7 @@ module.exports = {
       predictedDepartureTime: x.predicted[0] === 'true' ? Math.round((x.predictedDepartureTime[0] - currentTime) / 1000 / 60) : Math.round((x.scheduledDepartureTime[0] - currentTime) / 1000 / 60),
       deviation: x.predicted[0] === 'true' ? x.tripStatus[0].scheduleDeviation[0] / 60 : null
     }))
-    console.log(stopTimes[0].tripStatus)
+    console.log(stopTimes[0])
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(transformedStopTimes.filter(x => x.predictedDepartureTime > 0)))
   }
