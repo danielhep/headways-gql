@@ -24,7 +24,7 @@ exports.getRoutesFromStop = async function (obj, args, { slonik }) {
     SELECT * FROM gtfs.routes
       WHERE feed_index = ${obj.feed_index}
       AND route_id IN
-        (SELECT route_id FROM gtfs.trips
+        (SELECT DISTINCT route_id FROM gtfs.trips
         WHERE gtfs.trips.feed_index = ${obj.feed_index} 
         ${serviceIDQuery}
         AND gtfs.trips.trip_id IN
