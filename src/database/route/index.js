@@ -2,9 +2,11 @@ const { sql } = require('slonik')
 const { DateTime } = require('luxon')
 
 exports.getRoutes = function (obj, args, { slonik }) {
+  const agencyQuery = obj.agency_id ? sql`AND gtfs.routes.agency_id = ${obj.agency_id}` : sql``
   return slonik.any(sql`
     SELECT * FROM gtfs.routes
     WHERE feed_index = ${obj.feed_index}
+    ${agencyQuery}
     ORDER BY (substring(route_short_name, '^[0-9]+'))::int  
           ,substring(route_short_name, '[^0-9_].*$')
   `) // this sql sorts by numbers first, then letters
