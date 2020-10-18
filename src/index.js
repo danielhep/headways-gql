@@ -1,23 +1,9 @@
-const { sentry } = require('graphql-middleware-sentry')
-
 const resolvers = require('./resolvers')
 const database = require('./database')
 
 const { GraphQLServer } = require('graphql-yoga')
 
-const sentryMiddleware = sentry({
-  config: {
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.NODE_ENV
-  },
-  withScope: (scope, error, context) => {
-    // scope.setExtra('body', context.request.body)
-    // scope.setExtra('origin', context.request.headers.origin)
-    // scope.setExtra('user-agent', context.request.headers['user-agent'])
-  }
-})
-
-const server = new GraphQLServer({ typeDefs: './src/typeDefs.graphql', resolvers, context: database, middlewares: [sentryMiddleware] })
+const server = new GraphQLServer({ typeDefs: './src/typeDefs.graphql', resolvers, context: database })
 
 const port = process.env.PORT || 3000
 
