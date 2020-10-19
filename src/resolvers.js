@@ -3,7 +3,6 @@ const { GraphQLDate } = require('graphql-iso-date')
 module.exports = {
   Date: GraphQLDate,
   Query: {
-    sentry_test: () => { throw new Error('Hello Sentry!') },
     agencies: require('./database/agency').getAgencies,
     agency: require('./database/agency').getAgency,
     feeds: require('./database/feed').getFeeds,
@@ -17,7 +16,8 @@ module.exports = {
     stops_json: require('./database/stop').getStopsJson,
     stop: require('./database/stop').getStop,
     route: require('./database/route').getRoute,
-    routes_by_short_name: require('./database/route').getRoutesFromShortName
+    routes_by_short_name: require('./database/route').getRoutesFromShortName,
+    trip_stats: require('./database/stats').getTrips
   },
   Agency: {
     routes: require('./database/route').getRoutes,
@@ -45,5 +45,8 @@ module.exports = {
   },
   Trip: {
     route: ({ route_id, feed_index }, args, { dataLoaders }) => dataLoaders.routes.load({ route_id, feed_index })
+  },
+  TripStatistics: {
+    trips_per_hour: require('./database/stats').getTripsPerHour
   }
 }

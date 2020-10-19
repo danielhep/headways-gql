@@ -2,6 +2,7 @@ scalar Date
 scalar Time
 scalar PointObject
 scalar ShapeObject
+scalar TripsPerHour
 
 type Location {
   lat: Float
@@ -23,6 +24,7 @@ type Feed {
   stop(stop_id: ID!): Stop
   route(route_id: ID!): Route
   routes_by_short_name(route_short_names: [String]): [Route]
+  trip_stats: TripStatistics
 }
 
 type Route {
@@ -84,8 +86,11 @@ type Trip {
   route: Route
 }
 
+type TripStatistics {
+  trips_per_hour: TripsPerHour
+}
+
 type Query {
-  sentry_test: String
   feed(feed_index: Int): Feed
   feeds: [Feed]
   agencies: [Agency]
