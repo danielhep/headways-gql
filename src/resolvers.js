@@ -31,7 +31,8 @@ module.exports = {
     stops: require('./database/stop').getStops
   },
   Route: {
-    shapes: require('./database/route').getShapesFromRoute
+    shapes: require('./database/route').getShapesFromRoute,
+    trips: require('./database/trip').getTripsFromRoute
   },
   Stop: {
     stop_times: require('./database/stop').getStopTimes,

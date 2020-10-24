@@ -13,6 +13,8 @@ exports.getAgencies = async function getAgencies (obj, args, { slonik }) {
 }
 
 // Args: agency_id, feed_index
-exports.getAgency = async function getAgency (obj, args, context) {
-  return context.knex.withSchema('gtfs').select().where(args).from('agency').first()
+exports.getAgency = async function getAgency (obj, args, { slonik }) {
+  return slonik.one(sql`
+    SELECT * FROM gtfs.agency WHERE feed_index=${args.feed_index} AND agency_id=${args.agency_id}
+  `)
 }
