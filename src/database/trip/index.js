@@ -15,3 +15,12 @@ exports.getTripsFromRoute = function (obj, args, { slonik }) {
     AND feed_index = ${obj.feed_index}
   `)
 }
+
+exports.getTripCountFromRoute = async function (obj, args, { slonik }) {
+  const val = await (slonik.one(sql`
+    SELECT COUNT(*) FROM gtfs.trips
+    WHERE route_id = ${obj.route_id}
+    AND feed_index = ${obj.feed_index}
+  `))
+  return val.count
+}

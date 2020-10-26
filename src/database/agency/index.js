@@ -1,9 +1,12 @@
 const { sql } = require('slonik')
 
 exports.getAgencies = async function getAgencies (obj, args, { slonik }) {
+  const excludeFilter = args.exclude ? sql`AND agency_id != ALL(${sql.array(args.exclude, 'text')})` : sql``
+  console.log(excludeFilter)
   if (obj) {
     return slonik.any(sql`
       SELECT * FROM gtfs.agency WHERE feed_index=${obj.feed_index}
+      ${excludeFilter}
     `)
   } else {
     return slonik.any(sql`

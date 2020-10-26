@@ -16,7 +16,7 @@ type Feed {
   feed_location_friendly: String
   feed_lat: Float
   feed_lon: Float
-  agencies: [Agency]
+  agencies(exclude: [ID]): [Agency]
   stops: [Stop]
   stop_times: [StopTime]
   stops_json: [PointObject]
@@ -39,6 +39,7 @@ type Route {
   shapes: [ShapeObject]
   stops: [Stop]
   trips: [Trip]
+  trips_count: Int
 }
 
 type Agency {

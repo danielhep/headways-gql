@@ -32,7 +32,8 @@ module.exports = {
   },
   Route: {
     shapes: require('./database/route').getShapesFromRoute,
-    trips: require('./database/trip').getTripsFromRoute
+    trips: require('./database/trip').getTripsFromRoute,
+    trips_count: require('./database/trip').getTripCountFromRoute
   },
   Stop: {
     stop_times: require('./database/stop').getStopTimes,
